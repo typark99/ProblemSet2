@@ -113,4 +113,12 @@ print.benfords(mat=a)
 
 
 ##3. Testing##
+dataFitBenford <- c(rep(1,30), rep(2,18), rep(3,12),
+                    rep(4,10), rep(5,8), rep(6,7),
+                    rep(7,6), rep(8,5), rep(9,4))
+dataFitBenford <- rep(dataFitBenford, 10)
 
+dataNotFitBenford <- c(rep(1,11), rep(2,11), rep(3,11),
+                       rep(4,11), rep(5,11), rep(6,11),
+                       rep(7,11), rep(8,11), rep(9,12))
+dataNotFitBenford <- rep(dataNotFitBenford, 10)
