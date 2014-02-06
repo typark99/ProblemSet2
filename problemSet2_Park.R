@@ -194,13 +194,13 @@ unit.testing <- function () {
                 unit.tested()[[6]] == truthNotFit[[3]])
 
 ## Conduct unit tests for my function through the following steps: 
-  if (FALSE %in% unitTestFit[3:11]){
+  if (FALSE %in% unitTest[3:11]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law")
-  } else if (FALSE %in% unitTestNotFit[14:22]){
+  } else if (FALSE %in% unitTest[14:22]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 2 that do not fit Benford's law")
-  } else if (FALSE %in% unitTestFit[1:2]){
+  } else if (FALSE %in% unitTest[1:2]){
     print("FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law")
-  } else if (FALSE %in% unitTestNotFit[12:13]){
+  } else if (FALSE %in% unitTest[12:13]){
     print("The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
   } else {
     print("TRUE")
