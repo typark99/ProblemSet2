@@ -63,7 +63,7 @@ test.benfords(data=a, methods="Both")
 ##2. Critical values##
 print.benfords <- function(data){ #data can be either matrix or vector. 
   require(stringr)  #We will use the str_count function available from the stringr package.
-
+  
   if (class(data)=="matrix") { #This is for the case where the input data have a matrix form.
     firstDigit <- vector("list") #Create an empty list that will store the the first digit values for the entire matrix.
     for (i in 1:ncol(data)){ 
@@ -86,7 +86,7 @@ print.benfords <- function(data){ #data can be either matrix or vector.
   criticalValueM <- c(0.851, 0.967, 1.212) # a vector for the critical values of m statistic
   criticalValueD <- c(1.212, 1.330, 1.569) # a vector for the critical values of d statistic
   astericks <- c(" ", "*", "**", "***") # a vector for the asterisks that represent the significance levels (0.1, 0.05, 0.01).
- 
+  
   ## Create a 4 by 2 matrix for the output that will return the two statistics and the significance tests.
   output <- matrix(NA, ncol=2, nrow=4) 
   colnames(output) <- c("Statistic", "Significance")  #The column names
@@ -153,9 +153,7 @@ unit.testing <- function () {
   truthNotFit <- list(mStatNotFit, dStatNotFit, xiNotFit)
   
   #Include my function, unit.tested(), to conduct unit tests.
-  unit.tested <- function (data1=dataFitBenford, 
-                           data2=dataNotFitBenford,
-                           methods="Both") { #To make this tested function simple, data are treated as vector, and the methods option is set to be "Both".
+  unit.tested <- function (data1=dataFitBenford, data2=dataNotFitBenford) { #To make this tested function simple, data are treated as vector.
     require(stringr) 
     # First chunk of this function deals with dataFitBenford
     firstDigitFit <-substr(as.character(dataFitBenford), start=1, stop=1) #Our data set is a vector.
@@ -175,7 +173,7 @@ unit.testing <- function () {
     benfordDiffNotFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
     for (i in 1:9){   #This for loop calculates the common part of the two statistics.
       xiNotFit[i] <- sum(str_count(firstDigitNotFit, integers[i]))/length(firstDigitNotFit)
-      benfordDiffNotFit[i] <- xiNotFit[i] - log(1 + 1/as.numeric(integers[i]), base=10)
+      benfordDiffNotFit[i] <- xiNotFit[i] - log(1 + 1/as.numeric(integers[i]), base=2) #I changed the base of the log from 10 to 2 to make the function fail to pass the unit test; unit.testing() should return "FALSE: The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law"
     }
     mStatNotFit <- sqrt(length(firstDigitNotFit))*max(benfordDiffNotFit)
     dStatNotFit <- sqrt(length(firstDigitNotFit))*sqrt(sum(benfordDiffNotFit^2))
@@ -192,8 +190,8 @@ unit.testing <- function () {
                 unit.tested()[[4]] == truthNotFit[[1]],
                 unit.tested()[[5]] == truthNotFit[[2]],
                 unit.tested()[[6]] == truthNotFit[[3]])
-
-## Conduct unit tests for my function through the following steps: 
+  
+  ## Conduct unit tests for my function through the following steps: 
   if (FALSE %in% unitTest[3:11]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law")
   } else if (FALSE %in% unitTest[14:22]){
@@ -201,13 +199,14 @@ unit.testing <- function () {
   } else if (FALSE %in% unitTest[1:2]){
     print("FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law")
   } else if (FALSE %in% unitTest[12:13]){
-    print("The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
+    print("FALSE: The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
   } else {
     print("TRUE")
   }
 }
 
 
-unit.testing() #This returns "TRUE"
-
-
+unit.testing() 
+#Results:
+#[1] "FALSE: The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law"
+#We find that the function unit.testing() works.
