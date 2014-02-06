@@ -153,9 +153,7 @@ unit.testing <- function () {
   truthNotFit <- list(mStatNotFit, dStatNotFit, xiNotFit)
   
   #Include my function, unit.tested(), to conduct unit tests.
-  unit.tested <- function (data1=dataFitBenford, 
-                           data2=dataNotFitBenford,
-                           methods="Both") { #To make this tested function simple, data are treated as vector, and the methods option is set to be "Both".
+  unit.tested <- function (data1=dataFitBenford, data2=dataNotFitBenford) { #To make this tested function simple, data are treated as vector.
     require(stringr) 
     # First chunk of this function deals with dataFitBenford
     firstDigitFit <-substr(as.character(dataFitBenford), start=1, stop=1) #Our data set is a vector.
