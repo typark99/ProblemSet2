@@ -135,7 +135,7 @@ unit.testing <- function () {
   benfordDiffFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
   for (i in 1:9){   #This for loop calculates the common part of the two statistics.
     xiFit[i] <- sum(str_count(firstDigitFit, integers[i]))/length(firstDigitFit)
-    benfordDiffFit[i] <- xiFit[i] - log(1 + 1/as.numeric(integers[i]), base=2) #I changed the based for log from 10 to 2 to make the function fail to pass the unit test; unit.testing() should return "FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law" 
+    benfordDiffFit[i] <- xiFit[i] - log(1 + 1/as.numeric(integers[i]), base=2) #I changed the base for the log from 10 to 2 to make the function fail to pass the unit test; unit.testing() should return "FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law" 
   }
   mStatFit <- sqrt(length(firstDigitFit))*max(benfordDiffFit)
   dStatFit <- sqrt(length(firstDigitFit))*sqrt(sum(benfordDiffFit^2))
@@ -153,9 +153,7 @@ unit.testing <- function () {
   truthNotFit <- list(mStatNotFit, dStatNotFit, xiNotFit)
   
   #Include my function, unit.tested(), to conduct unit tests.
-  unit.tested <- function (data1=dataFitBenford, 
-                           data2=dataNotFitBenford,
-                           methods="Both") { #To make this tested function simple, data are treated as vector, and the methods option is set to be "Both".
+  unit.tested <- function (data1=dataFitBenford, data2=dataNotFitBenford) { #To make this tested function simple, data are treated as vector.
     require(stringr) 
     # First chunk of this function deals with dataFitBenford
     firstDigitFit <-substr(as.character(dataFitBenford), start=1, stop=1) #Our data set is a vector.
@@ -201,7 +199,7 @@ unit.testing <- function () {
   } else if (FALSE %in% unitTest[1:2]){
     print("FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law")
   } else if (FALSE %in% unitTest[12:13]){
-    print("The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
+    print("FALSE: The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
   } else {
     print("TRUE")
   }
