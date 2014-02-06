@@ -63,7 +63,7 @@ test.benfords(data=a, methods="Both")
 ##2. Critical values##
 print.benfords <- function(data){ #data can be either matrix or vector. 
   require(stringr)  #We will use the str_count function available from the stringr package.
-
+  
   if (class(data)=="matrix") { #This is for the case where the input data have a matrix form.
     firstDigit <- vector("list") #Create an empty list that will store the the first digit values for the entire matrix.
     for (i in 1:ncol(data)){ 
@@ -86,7 +86,7 @@ print.benfords <- function(data){ #data can be either matrix or vector.
   criticalValueM <- c(0.851, 0.967, 1.212) # a vector for the critical values of m statistic
   criticalValueD <- c(1.212, 1.330, 1.569) # a vector for the critical values of d statistic
   astericks <- c(" ", "*", "**", "***") # a vector for the asterisks that represent the significance levels (0.1, 0.05, 0.01).
- 
+  
   ## Create a 4 by 2 matrix for the output that will return the two statistics and the significance tests.
   output <- matrix(NA, ncol=2, nrow=4) 
   colnames(output) <- c("Statistic", "Significance")  #The column names
@@ -152,68 +152,62 @@ unit.testing <- function () {
   dStatNotFit <- sqrt(length(firstDigitNotFit))*sqrt(sum(benfordDiffNotFit^2))
   truthNotFit <- list(mStatNotFit, dStatNotFit, xiNotFit)
   
-  #Include my function, test.benfords(), to conduct unit tests.
-  test.benfords <- function (data, methods="Both") { #data can be either matrix or vector; the methods option is set to be "Both" as default.
+  #Include my function, unit.tested(), to conduct unit tests.
+  unit.tested <- function (data1=dataFitBenford, data2=dataNotFitBenford) { #To make this tested function simple, data are treated as vector, and remove the methods option.
     require(stringr) 
-    if (class(data)=="matrix") { #This is for the case where the input data have a matrix form.
-      firstDigit <- vector("list") #Create an empty list that will store the the first digit values for the entire matrix.
-      for (i in 1:ncol(data)){ 
-        firstDigit[[i]] <-substr(as.character(data[,i]), start=1, stop=1) #Use the substr function to extract only the first digit for each datum.
-      }
-      firstDigit <- unlist(firstDigit) #Unlist the list to store the first values in the form of vector.
-    } else { #If the input data have the vector form, we can directly extract the first digit values from the vector.
-      firstDigit <-substr(as.character(data), start=1, stop=1)
-    } 
-    xi<-rep(NA, 9)  #Create a vector storage that will contain the Xi part of the statistics
+    # First chunk of this function deals with dataFitBenford
+    firstDigitFit <-substr(as.character(dataFitBenford), start=1, stop=1) #Our data set is a vector.
+    xiFit<-rep(NA, 9)  #Create a vector storage that will contain the Xi part of the statistics
     integers<-as.character(1:9)  #Treat 1-9 integers as a character so that the str_count function can work below.
-    benfordDiff<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
+    benfordDiffFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
     for (i in 1:9){   #This for loop calculates the common part of the two statistics.
-      xi[i] <- sum(str_count(firstDigit, integers[i]))/length(firstDigit)
-      benfordDiff[i] <- xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)
-    }  
-    if (methods=="Leemis") {
-      mStat <- sqrt(length(firstDigit))*max(benfordDiff) 
-      output <- list(mStat, xi)
-      names(output) <- c("Leemis' m statistic", "Full digit disribution (1~9)")
+      xiFit[i] <- sum(str_count(firstDigitFit, integers[i]))/length(firstDigitFit)
+      benfordDiffFit[i] <- xiFit[i] - log(1 + 1/as.numeric(integers[i]), base=10)
     }
-    if (methods=="Cho-Gains"){
-      dStat <- sqrt(length(firstDigit))*sqrt(sum(benfordDiff^2))
-      output <- list(dStat, xi)
-      names(output) <- c("Cho-Gains' d", "Full digit disribution (1~9)")
+    mStatFit <- sqrt(length(firstDigitFit))*max(benfordDiffFit)
+    dStatFit <- sqrt(length(firstDigitFit))*sqrt(sum(benfordDiffFit^2))
+    
+    # Second chunk of this function deals with dataNotFitBenford
+    firstDigitNotFit <-substr(as.character(dataNotFitBenford), start=1, stop=1) #Our data set is a vector.
+    xiNotFit<-rep(NA, 9)  #Create a vector storage that will contain the Xi part of the statistics
+    benfordDiffNotFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
+    for (i in 1:9){   #This for loop calculates the common part of the two statistics.
+      xiNotFit[i] <- sum(str_count(firstDigitNotFit, integers[i]))/length(firstDigitNotFit)
+      benfordDiffNotFit[i] <- xiNotFit[i] - log(1 + 1/as.numeric(integers[i]), base=10)
     }
-    if(methods=="Both"){
-      mStat <- sqrt(length(firstDigit))*max(benfordDiff)
-      dStat <- sqrt(length(firstDigit))*sqrt(sum(benfordDiff^2))
-      output <- list(mStat, dStat, xi)
-      names(output) <- c("Leemis' m statistic", "Cho-Gains' d", "Full digit disribution (1~9)")
-    }
+    mStatNotFit <- sqrt(length(firstDigitNotFit))*max(benfordDiffNotFit)
+    dStatNotFit <- sqrt(length(firstDigitNotFit))*sqrt(sum(benfordDiffNotFit^2))
+    
+    # Output
+    output <- list(mStatFit, dStatFit, xiFit, mStatNotFit, dStatNotFit, xiNotFit)
     return(output)
   }
   
-  ## Compare the results from my test.benfords function with the true values. 
-  #Unit tests for the data that fit Benford's law
-  unitTestFit <- c(test.benfords(dataFitBenford)[[1]] == truthFit[[1]],
-                   test.benfords(dataFitBenford)[[2]] == truthFit[[2]],
-                   test.benfords(dataFitBenford)[[3]] == truthFit[[3]])
-  #Unit tests for the data that do not fit Benford's law
-  unitTestNotFit <- c(test.benfords(dataNotFitBenford)[[1]] == truthNotFit[[1]],
-                      test.benfords(dataNotFitBenford)[[2]] == truthNotFit[[2]],
-                      test.benfords(dataNotFitBenford)[[3]] == truthNotFit[[3]])
+  ## Compare the results from unit.tested function with the true values.
+  unitTest <- c(unit.tested()[[1]] == truthFit[[1]],
+                unit.tested()[[2]] == truthFit[[2]],
+                unit.tested()[[3]] == truthFit[[3]],
+                unit.tested()[[4]] == truthNotFit[[1]],
+                unit.tested()[[5]] == truthNotFit[[2]],
+                unit.tested()[[6]] == truthNotFit[[3]])
   
   ## Conduct unit tests for my function through the following steps: 
-  if (FALSE %in% unitTestFit[3:11]){
+  if (FALSE %in% unitTest[3:11]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law")
-  } else if (FALSE %in% unitTestNotFit[3:11]){
+  } else if (FALSE %in% unitTest[14:22]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 2 that do not fit Benford's law")
-  } else if (FALSE %in% unitTestFit[1:2]){
+  } else if (FALSE %in% unitTest[1:2]){
     print("FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law")
-  } else if (FALSE %in% unitTestNotFit[1:2]){
+  } else if (FALSE %in% unitTest[12:13]){
     print("The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
   } else {
     print("TRUE")
   }
 }
 
+
 unit.testing() #This returns "TRUE"
+
+
 
 
