@@ -153,9 +153,7 @@ unit.testing <- function () {
   truthNotFit <- list(mStatNotFit, dStatNotFit, xiNotFit)
   
   #Include my function, unit.tested(), to conduct unit tests.
-  unit.tested <- function (data1=dataFitBenford, 
-                           data2=dataNotFitBenford,
-                           methods="Both") { #To make this tested function simple, data are treated as vector, and the methods option is set to be "Both".
+  unit.tested <- function (data1=dataFitBenford,data2=dataNotFitBenford) { #To make this tested function simple, data are treated as vector, and the methods option is set to be "Both".
     require(stringr) 
     # First chunk of this function deals with dataFitBenford
     firstDigitFit <-substr(as.character(dataFitBenford), start=1, stop=1) #Our data set is a vector.
@@ -201,7 +199,7 @@ unit.testing <- function () {
   } else if (FALSE %in% unitTest[1:2]){
     print("FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law")
   } else if (FALSE %in% unitTest[12:13]){
-    print("The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
+    print("FALSE: The function calculates the wrong m or D statistic for dataset 2 that do not fit Benford's law")
   } else {
     print("TRUE")
   }
