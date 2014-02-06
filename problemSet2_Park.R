@@ -129,7 +129,7 @@ unit.testing <- function () {
   
   ## Generate true values based on each of the data sets.
   # True values for dataFitBenford:
-  firstDigitFit <-substr(as.character(dataFitBenford), start=2, stop=2) #I changed "stat=1, stop=1" to "start=2, stop=2" make the function fail to pass unit test; unit.testing() should return "FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law"
+  firstDigitFit <-substr(as.character(dataFitBenford), start=2, stop=2) #I changed "stat=1, stop=1" to "start=2, stop=2" to make the function fail to pass unit test; unit.testing() should return "FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law"
   xiFit<-rep(NA, 9)  #Create a vector storage that will contain the Xi part of the statistics
   integers<-as.character(1:9)  #Treat 1-9 integers as a character so that the str_count function can work below.
   benfordDiffFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
@@ -210,6 +210,6 @@ unit.testing()
 
 #The results:
 #[1] "FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law"
-#unit.testing() function works well.
+#We find that unit.testing() function works.
 
 
