@@ -63,7 +63,7 @@ test.benfords(data=a, methods="Both")
 ##2. Critical values##
 print.benfords <- function(data){ #data can be either matrix or vector. 
   require(stringr)  #We will use the str_count function available from the stringr package.
-
+  
   if (class(data)=="matrix") { #This is for the case where the input data have a matrix form.
     firstDigit <- vector("list") #Create an empty list that will store the the first digit values for the entire matrix.
     for (i in 1:ncol(data)){ 
@@ -86,7 +86,7 @@ print.benfords <- function(data){ #data can be either matrix or vector.
   criticalValueM <- c(0.851, 0.967, 1.212) # a vector for the critical values of m statistic
   criticalValueD <- c(1.212, 1.330, 1.569) # a vector for the critical values of d statistic
   astericks <- c(" ", "*", "**", "***") # a vector for the asterisks that represent the significance levels (0.1, 0.05, 0.01).
- 
+  
   ## Create a 4 by 2 matrix for the output that will return the two statistics and the significance tests.
   output <- matrix(NA, ncol=2, nrow=4) 
   colnames(output) <- c("Statistic", "Significance")  #The column names
@@ -135,7 +135,7 @@ unit.testing <- function () {
   benfordDiffFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
   for (i in 1:9){   #This for loop calculates the common part of the two statistics.
     xiFit[i] <- sum(str_count(firstDigitFit, integers[i]))/length(firstDigitFit)
-    benfordDiffFit[i] <- xiFit[i] - log(1 + 1/as.numeric(integers[i]), base=10)
+    benfordDiffFit[i] <- xiFit[i] - log(1 + 1/as.numeric(integers[i]), base=2) #I changed the based for log from 10 to 2 to make the function fail to pass the unit test; unit.testing() should return "FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law" 
   }
   mStatFit <- sqrt(length(firstDigitFit))*max(benfordDiffFit)
   dStatFit <- sqrt(length(firstDigitFit))*sqrt(sum(benfordDiffFit^2))
@@ -146,7 +146,7 @@ unit.testing <- function () {
   benfordDiffNotFit<-rep(NA, 9) #Create a vector storage that will contain the "xi[i] - log(1 + 1/as.numeric(integers[i]), base=10)" part. 
   for (i in 1:9){   #This for loop calculates the common part of the two statistics.
     xiNotFit[i] <- sum(str_count(firstDigitNotFit, integers[i]))/length(firstDigitNotFit)
-    benfordDiffNotFit[i] <- xiNotFit[i] - log(1 + 1/as.numeric(integers[i]), base=10)
+    benfordDiffNotFit[i] <- xiNotFit[i] - log(1 + 1/as.numeric(integers[i]), base=10) 
   }
   mStatNotFit <- sqrt(length(firstDigitNotFit))*max(benfordDiffNotFit)
   dStatNotFit <- sqrt(length(firstDigitNotFit))*sqrt(sum(benfordDiffNotFit^2))
@@ -192,8 +192,8 @@ unit.testing <- function () {
                 unit.tested()[[4]] == truthNotFit[[1]],
                 unit.tested()[[5]] == truthNotFit[[2]],
                 unit.tested()[[6]] == truthNotFit[[3]])
-
-## Conduct unit tests for my function through the following steps: 
+  
+  ## Conduct unit tests for my function through the following steps: 
   if (FALSE %in% unitTest[3:11]){
     print("FALSE: The function calculates the wrong Benford¡¯s distribution for dataset 1 that fit Benford's law")
   } else if (FALSE %in% unitTest[14:22]){
@@ -208,6 +208,7 @@ unit.testing <- function () {
 }
 
 
-unit.testing() #This returns "TRUE"
-
-
+unit.testing() 
+#Results:
+#[1] "FALSE: The function calculates the wrong m or D statistic for dataset 1 that fit Benford's law"
+#We find that the function unit.testing() works.
